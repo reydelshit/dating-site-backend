@@ -10,23 +10,26 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
 
     case "GET":
-        if (isset($_GET['credential_id'])) {
-            $credential_id = $_GET['credential_id'];
-            $sql = "SELECT * FROM profile WHERE credential_id = :credential_id";
-        }
+        if (isset($_GET['interest'])) {
+            $interest = $_GET['interest'];
+            $interestsArray = explode(", ", $interest);
+            $placeholders = rtrim(str_repeat('?, ', count($interestsArray)), ', ');
 
+            $sql = "SELECT * FROM profile WHERE ";
+            $conditions = [];
 
+            foreach ($interestsArray as $key => $singleInterest) {
+                $conditions[] = "FIND_IN_SET(?, interest) > 0"; // Check if the interest exists in the string
+            }
 
+            $sql .= '(' . implode(' OR ', $conditions) . ')';
 
-        if (!isset($_GET['credential_id']) && !isset($_GET['interest'])) {
-            $sql = "SELECT * FROM profile";
-        }
-
-        if (isset($sql)) {
             $stmt = $conn->prepare($sql);
 
-            if (isset($credential_id)) {
-                $stmt->bindParam(':credential_id', $credential_id);
+            if (isset($interest)) {
+                foreach ($interestsArray as $paramKey => $paramValue) {
+                    $stmt->bindValue(($paramKey + 1), $paramValue, PDO::PARAM_STR);
+                }
             }
 
             $stmt->execute();
