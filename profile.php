@@ -15,10 +15,13 @@ switch ($method) {
             $sql = "SELECT * FROM profile WHERE credential_id = :credential_id";
         }
 
+        if (isset($_GET['profile_id'])) {
+            $profile_id = $_GET['profile_id'];
+            $sql = "SELECT * FROM profile WHERE profile_id = :profile_id";
+        }
 
 
-
-        if (!isset($_GET['credential_id']) && !isset($_GET['interest'])) {
+        if (!isset($_GET['credential_id']) && !isset($_GET['profile_id'])) {
             $sql = "SELECT * FROM profile";
         }
 
@@ -27,6 +30,10 @@ switch ($method) {
 
             if (isset($credential_id)) {
                 $stmt->bindParam(':credential_id', $credential_id);
+            }
+
+            if (isset($profile_id)) {
+                $stmt->bindParam(':profile_id', $profile_id);
             }
 
             $stmt->execute();

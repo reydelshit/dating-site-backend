@@ -19,7 +19,7 @@ switch ($method) {
             $conditions = [];
 
             foreach ($interestsArray as $key => $singleInterest) {
-                $conditions[] = "FIND_IN_SET(?, interest) > 0"; // Check if the interest exists in the string
+                $conditions[] = "FIND_IN_SET(?, interest) > 0";
             }
 
             $sql .= '(' . implode(' OR ', $conditions) . ')';
