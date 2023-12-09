@@ -39,10 +39,10 @@ switch ($method) {
 
     case "POST":
         $user = json_decode(file_get_contents('php://input'));
-        $sql = "INSERT INTO credential (fullname, username, password) VALUES (:fullname, :username, :password)";
+        $sql = "INSERT INTO credential (username, password) VALUES (:username, :password)";
         $stmt = $conn->prepare($sql);
         $created_at = date('Y-m-d');
-        $stmt->bindParam(':fullname', $user->fullname);
+        // $stmt->bindParam(':fullname', $user->fullname);
         $stmt->bindParam(':username', $user->username);
         $stmt->bindParam(':password', $user->password);
 

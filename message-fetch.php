@@ -20,7 +20,14 @@ switch ($method) {
         message.receiver_id, 
         message.message_context, 
         message.created_at, 
-        profile.fullname AS sender_username 
+        profile.fullname AS sender_username ,
+        profile.gender,
+        profile.looking_for,
+        profile.age,
+        profile.fullname,
+        profile.course
+
+
     FROM 
         message 
     LEFT JOIN 

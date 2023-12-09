@@ -45,7 +45,7 @@ switch ($method) {
 
     case "POST":
         $profile = json_decode(file_get_contents('php://input'));
-        $sql = "INSERT INTO profile (fullname, gender, year, age, course, interest, looking_for, profile, credential_id) VALUES (:fullname, :gender, :year, :age, :course, :interest, :looking_for, :profile, :credential_id)";
+        $sql = "INSERT INTO profile (fullname, gender, year, age, course, interest, looking_for, profile, credential_id, preferences, municipality, province) VALUES (:fullname, :gender, :year, :age, :course, :interest, :looking_for, :profile, :credential_id, :preferences, :municipality, :province)";
         $stmt = $conn->prepare($sql);
         $created_at = date('Y-m-d');
         $stmt->bindParam(':fullname', $profile->fullname);
@@ -57,6 +57,10 @@ switch ($method) {
         $stmt->bindParam(':looking_for', $profile->looking_for);
         $stmt->bindParam(':profile', $profile->profile);
         $stmt->bindParam(':credential_id', $profile->credential_id);
+        $stmt->bindParam(':preferences', $profile->preferences);
+        $stmt->bindParam(':municipality', $profile->municipality);
+        $stmt->bindParam(':province', $profile->province);
+
 
 
 
@@ -77,41 +81,47 @@ switch ($method) {
 
     case "PUT":
         $profile = json_decode(file_get_contents('php://input'));
-        $sql = "UPDATE users 
-                SET name = :name, 
-                    email = :email, 
-                    password = :password, 
-                    birthday = :birthday, 
-                    gender = :gender, 
-                    created_at = :created_at, 
-                    address = :address,
-                    profile_picture = :profile_picture
-                WHERE user_id = :user_id";
+        $sql = "UPDATE profile SET 
+                fullname = :fullname,
+                gender = :gender,
+                year = :year,
+                age = :age,
+                course = :course,
+                interest = :interest,
+                looking_for = :looking_for,
+                profile = :profile,
+                preferences = :preferences,
+                municipality = :municipality,
+                province = :province
+                WHERE credential_id = :credential_id";
 
         $stmt = $conn->prepare($sql);
-        $created_at = date('Y-m-d');
-        $stmt->bindParam(':name', $profile->name);
-        $stmt->bindParam(':email', $profile->email);
-        $stmt->bindParam(':password', $profile->password);
-        $stmt->bindParam(':birthday', $profile->birthday);
+
+        // Bind parameters
+        $stmt->bindParam(':fullname', $profile->fullname);
         $stmt->bindParam(':gender', $profile->gender);
-        $stmt->bindParam(':created_at', $created_at);
-        $stmt->bindParam(':address', $profile->address);
-        $stmt->bindParam(':user_id', $profile->user_id);
-        $stmt->bindParam(':profile_picture', $profile->profile_picture);
+        $stmt->bindParam(':year', $profile->year);
+        $stmt->bindParam(':age', $profile->age);
+        $stmt->bindParam(':course', $profile->course);
+        $stmt->bindParam(':interest', $profile->interest);
+        $stmt->bindParam(':looking_for', $profile->looking_for);
+        $stmt->bindParam(':profile', $profile->profile);
+        $stmt->bindParam(':credential_id', $profile->credential_id);
+        $stmt->bindParam(':preferences', $profile->preferences);
+        $stmt->bindParam(':municipality', $profile->municipality);
+        $stmt->bindParam(':province', $profile->province);
 
 
 
         if ($stmt->execute()) {
-
             $response = [
                 "status" => "success",
-                "message" => "User updated successfully"
+                "message" => "User profile updated successfully"
             ];
         } else {
             $response = [
                 "status" => "error",
-                "message" => "User update failed"
+                "message" => "Failed to update user profile"
             ];
         }
 
